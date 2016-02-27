@@ -60,65 +60,65 @@
 (require 'cl)
 
 
-(defvar osg-idle-delay 0.5)
+(defvar org-search-goto-idle-delay 0.5)
 
-(setq osg-max-results 50)
+(setq org-search-goto-max-results 50)
 
-(defvar osg-match-face 'match)
+(defvar org-search-goto-match-face 'match)
 
-(defvar osg-header-face 'underline)
+(defvar org-search-goto-header-face 'underline)
 
-(defvar osg-warning-face 'font-lock-warning-face)
+(defvar org-search-goto-warning-face 'font-lock-warning-face)
 
-(defvar osg-map
+(defvar org-search-goto-map
   (let ((map (copy-keymap minibuffer-local-map)))
-    (define-key map (kbd "<down>") 'osg-next-line)
-    (define-key map (kbd "<up>") 'osg-previous-line)
-    (define-key map (kbd "<prior>") 'osg-previous-page)
-    (define-key map (kbd "<next>") 'osg-next-page)
-   map))
+    (define-key map (kbd "<down>") 'org-search-goto-next-line)
+    (define-key map (kbd "<up>") 'org-search-goto-previous-line)
+    (define-key map (kbd "<prior>") 'org-search-goto-previous-page)
+    (define-key map (kbd "<next>") 'org-search-goto-next-page)
+    map))
 
 
 
 
 
-(defvar osg-buffer-name "*org search goto*")
+(defvar org-search-goto-buffer-name "*org search goto*")
 
-(defvar osg-history-list nil)
+(defvar org-search-goto-history-list nil)
 
-(defvar osg-org-buffers nil)
+(defvar org-search-goto-org-buffers nil)
 
-(defvar osg-history-list nil)
+(defvar org-search-goto-history-list nil)
 
-(defvar osg-line-info nil)
+(defvar org-search-goto-line-info nil)
 
-(defvar osg-orig-window nil)
+(defvar org-search-goto-orig-window nil)
 
-(defvar osg-orig-buffer nil)
+(defvar org-search-goto-orig-buffer nil)
 
 
-(defun osg-previous-line ()
+(defun org-search-goto-previous-line ()
   (interactive)
-  (osg-move-selection 'forward-line -1))
+  (org-search-goto-move-selection 'forward-line -1))
 
 
-(defun osg-next-line ()
+(defun org-search-goto-next-line ()
   (interactive)
-  (osg-move-selection 'forward-line 1))
+  (org-search-goto-move-selection 'forward-line 1))
 
 
-(defun osg-previous-page ()
+(defun org-search-goto-previous-page ()
   (interactive)
-  (osg-move-selection 'scroll-down))
+  (org-search-goto-move-selection 'scroll-down))
 
 
-(defun osg-next-page ()
+(defun org-search-goto-next-page ()
   (interactive)
-  (osg-move-selection 'scroll-up))
+  (org-search-goto-move-selection 'scroll-up))
 
 
-(defun osg-move-selection (movefunc &optional movearg)
-  (let ((win (get-buffer-window osg-buffer-name)))
+(defun org-search-goto-move-selection (movefunc &optional movearg)
+  (let ((win (get-buffer-window org-search-goto-buffer-name)))
     (if win
         (with-selected-window win
           (condition-case nil
@@ -126,34 +126,34 @@
             (beginning-of-buffer (goto-char (point-min)))
             (end-of-buffer (goto-char (point-max))))
 
-          (setq osg-line-info (get-text-property (line-beginning-position) 'osg-line-info))))))
+          (setq org-search-goto-line-info (get-text-property (line-beginning-position) 'org-search-goto-line-info))))))
 
 
 ;; adapted from EmacsWiki: http://www.emacswiki.org/emacs/StringPermutations
-(defun osg-list-permutations (l)
+(defun org-search-goto-list-permutations (l)
   (if (null l)
       (list '())
     (mapcan #'(lambda( a )
                 (mapcan #'(lambda( p )
                             (list (cons a p)))
-                        (osg-list-permutations (remove* a l :count 1))))
+                        (org-search-goto-list-permutations (remove* a l :count 1))))
             l)))
 
 
 
-(defun osg-check-input ()
-  (when (sit-for osg-idle-delay)
+(defun org-search-goto-check-input ()
+  (when (sit-for org-search-goto-idle-delay)
     (let ((input (split-string (minibuffer-contents) " " t)))
-      (unless (equal input osg-current-input)
-        (setq osg-current-input input)
+      (unless (equal input org-search-goto-current-input)
+        (setq org-search-goto-current-input input)
 
-        (with-selected-window (get-buffer-window osg-buffer-name)
+        (with-selected-window (get-buffer-window org-search-goto-buffer-name)
           (erase-buffer))
 
         (when input
           (let ((number-of-words (length input))
                 (result-count 0)
-                (buffers osg-org-buffers)
+                (buffers org-search-goto-org-buffers)
                 prematch)
 
             (setq prematch (mapconcat (lambda (m)
@@ -161,7 +161,7 @@
                                       input
                                       "\\|"))
 
-            (move-overlay osg-overlay
+            (move-overlay org-search-goto-overlay
                           (line-end-position)
                           (line-end-position)
                           (current-buffer))
@@ -170,13 +170,13 @@
               (redisplay t)
               (unwind-protect
                   (while (and buffers
-                              (< result-count osg-max-results))
+                              (< result-count org-search-goto-max-results))
                     (let ((buffer (pop buffers)))
                       (with-current-buffer buffer
                         (save-excursion
                           (goto-char (point-min))
                           (let ((header-not-printed (buffer-name)))
-                            (while (and (< result-count osg-max-results)
+                            (while (and (< result-count org-search-goto-max-results)
                                         (re-search-forward prematch nil t))
                               (let* ((start (save-excursion
                                               (save-match-data
@@ -220,7 +220,7 @@
                                            (let ((str (buffer-substring (line-beginning-position)
                                                                         (line-end-position))))
                                              (dolist (m (cdr info))
-                                               (put-text-property (car m) (cdr m) 'face osg-match-face
+                                               (put-text-property (car m) (cdr m) 'face org-search-goto-match-face
                                                                   str))
                                              str))
                                          matches
@@ -236,40 +236,40 @@
                                                         match)))
 
                                   (let ((line-num (1+ (count-lines (point) (point-min)))))
-                                    (with-current-buffer osg-buffer-name
+                                    (with-current-buffer org-search-goto-buffer-name
                                       (when header-not-printed
-                                        (insert (propertize header-not-printed 'face osg-header-face) "\n")
+                                        (insert (propertize header-not-printed 'face org-search-goto-header-face) "\n")
                                         (setq header-not-printed nil))
 
                                       (insert (format "%7d:" line-num) match)
                                       (put-text-property (line-beginning-position) (1+ (line-beginning-position))
-                                                         'osg-line-info (list 'buffer buffer 'line line-num))
+                                                         'org-search-goto-line-info (list 'buffer buffer 'line line-num))
                                       (insert "\n")))
 
                                   (incf result-count))
 
                                 (goto-char end))))))))
 
-              (delete-overlay osg-overlay)))
+                (delete-overlay org-search-goto-overlay)))
 
-            (with-selected-window (get-buffer-window osg-buffer-name)
+            (with-selected-window (get-buffer-window org-search-goto-buffer-name)
               (goto-char (point-min))
-              (osg-next-line))
+              (org-search-goto-next-line))
 
-            (if (and (= result-count osg-max-results)
+            (if (and (= result-count org-search-goto-max-results)
                      (sit-for 0.2))
                 (message (propertize "Too many matches, keep typing to narrow it down more"
-                                     'face osg-warning-face)))))))))
+                                     'face org-search-goto-warning-face)))))))))
 
 
 
-(defun osg ()
+(defun org-search-goto ()
   (interactive)
 
-  (setq osg-overlay (make-overlay (point) (point)))
-  (overlay-put osg-overlay 'after-string (concat "  " (propertize "searching..." 'face osg-warning-face)))
+  (setq org-search-goto-overlay (make-overlay (point) (point)))
+  (overlay-put org-search-goto-overlay 'after-string (concat "  " (propertize "searching..." 'face org-search-goto-warning-face)))
 
-  (setq osg-org-buffers
+  (setq org-search-goto-org-buffers
         (delete-if 'null
                    (mapcar (lambda (b)
                              (with-current-buffer b
@@ -279,30 +279,30 @@
 
   (let ((cursor-in-non-selected-windows 'box))
     (save-window-excursion
-      (add-hook 'post-command-hook 'osg-check-input)
+      (add-hook 'post-command-hook 'org-search-goto-check-input)
 
-      (setq osg-current-input nil)
-      (setq osg-line-info nil)
-      (setq osg-orig-window (selected-window))
-      (setq osg-orig-buffer (current-buffer))
+      (setq org-search-goto-current-input nil)
+      (setq org-search-goto-line-info nil)
+      (setq org-search-goto-orig-window (selected-window))
+      (setq org-search-goto-orig-buffer (current-buffer))
 
-      (if (equal (buffer-name) osg-buffer-name)
+      (if (equal (buffer-name) org-search-goto-buffer-name)
           (kill-buffer))
       (save-selected-window
-        (pop-to-buffer osg-buffer-name)
+        (pop-to-buffer org-search-goto-buffer-name)
         (erase-buffer))
 
       (unwind-protect
-          (let ((minibuffer-local-map osg-map))
-            (read-string "Search for: " nil 'osg-history-list))
+          (let ((minibuffer-local-map org-search-goto-map))
+            (read-string "Search for: " nil 'org-search-goto-history-list))
 
-        (remove-hook 'post-command-hook 'osg-check-input))))
+        (remove-hook 'post-command-hook 'org-search-goto-check-input))))
 
-  (if (not osg-line-info)
+  (if (not org-search-goto-line-info)
       (message "No match on this line.")
 
-    (switch-to-buffer (plist-get osg-line-info 'buffer))
-    (goto-line (plist-get osg-line-info 'line))
+    (switch-to-buffer (plist-get org-search-goto-line-info 'buffer))
+    (goto-line (plist-get org-search-goto-line-info 'line))
     (when (outline-invisible-p)
       (save-excursion
         (outline-previous-visible-heading 1)
