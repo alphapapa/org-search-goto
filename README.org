@@ -6,3 +6,6 @@ This repo was created to maintain some improvements to =org-search-goto= and =or
 
 I welcome bug reports, feature requests, and patches or pull requests.  I am not the "official" maintainer (though there doesn't seem to be one), but I'm glad to help if I can.  No promises, of course.  :)
 
+** License
+
+This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
