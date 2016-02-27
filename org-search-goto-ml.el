@@ -2,7 +2,7 @@
 
 ;; Copyright (C) 2011
 
-;; Author:
+;; Author: Tom <adatgyujto@gmail.com>
 ;; Keywords:
 
 ;; This program is free software; you can redistribute it and/or modify
@@ -19,25 +19,40 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
-;;;
-;;;
-;;; Usage: M-x osg, then start typing
-;;;
-;;; Select from the matches with up/down/pgup/pgdown and press enter
-;;; to go that location
-;;; (you can navigate the history with M-p/M-n)
-;;;
-;;; If the search string contains several strings separated by spaces then
-;;; these substrings can appear in any order in the results.
-;;;
-;;; The search handles an org heading and its text as one block, so
-;;; the substrings can match in any part of an org entry.
-;;;
-;;; If the heading is not matching, only the body, the heading is added
-;;; to the results anyway to indicate which entry is matched.
-;;;
-
 ;;
+;; Usage: M-x osg, then start typing
+;;
+;; Select from the matches with up/down/pgup/pgdown and press enter
+;; to go that location
+;; (you can navigate the history with M-p/M-n)
+;;
+;; If the search string contains several strings separated by spaces then
+;; these substrings can appear in any order in the results.
+;;
+;; The search handles an org heading and its text as one block, so
+;; the substrings can match in any part of an org entry.
+;;
+;; If the heading is not matching, only the body, the heading is added
+;; to the results anyway to indicate which entry is matched.
+
+;;; History:
+;;
+;; 2011-12-11: Tom <adatgyujto@gmail.com> posted the original version
+;; of org-search-goto on the org-mode mailing list:
+;; <https://lists.gnu.org/archive/html/emacs-orgmode/2011-12/msg00196.html>. He
+;; said it was a variant of org-occur-goto, which was also created by him:
+;; <https://www.emacswiki.org/emacs/org-occur-goto.el>.
+
+;; 2011-12-15: Tom posted org-search-goto-ml:
+;; <https://lists.gnu.org/archive/html/emacs-orgmode/2011-12/msg00515.html>.
+
+;; 2012-01-09: anon made minor fixes to the copy of
+;; org-search-goto-ml.el on EmacsWiki:
+;; <https://www.emacswiki.org/emacs/org-search-goto-ml.el>.
+
+;; 2016-02-27: Adam Porter made a minor fix and uploaded it to a
+;; GitHub repo: <https://github.com/alphapapa/org-search-goto>.
+
 
 ;;; Code:
 
