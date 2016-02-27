@@ -1,0 +1,8 @@
+* org-search-goto
+
+This repo was created to maintain some improvements to =org-search-goto= and =org-search-goto-ml= (primarily the latter, since that's what I use).  The "official" home of =org-search-goto-ml= is on [[https://www.emacswiki.org/emacs/org-search-goto-ml.el][EmacsWiki]], but I much prefer git over a wiki for maintaining software.  Improvements made here may be uploaded there if I get around to it.
+
+** Contributing
+
+I welcome bug reports, feature requests, and patches or pull requests.  I am not the "official" maintainer (though there doesn't seem to be one), but I'm glad to help if I can.  No promises, of course.  :)
+
