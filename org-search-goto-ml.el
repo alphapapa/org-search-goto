@@ -1,9 +1,9 @@
 ;;; org-search-goto-ml.el --- Use multiline search to go to locations in your org buffers
 
-;; Copyright (C) 2011  
+;; Copyright (C) 2011
 
-;; Author:  
-;; Keywords: 
+;; Author:
+;; Keywords:
 
 ;; This program is free software; you can redistribute it and/or modify
 ;; it under the terms of the GNU General Public License as published by
@@ -19,14 +19,14 @@
 ;; along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ;;; Commentary:
-;;; 
-;;; 
+;;;
+;;;
 ;;; Usage: M-x osg, then start typing
-;;; 
+;;;
 ;;; Select from the matches with up/down/pgup/pgdown and press enter
 ;;; to go that location
-;;; (you can navigate the history with M-p/M-n) 
-;;; 
+;;; (you can navigate the history with M-p/M-n)
+;;;
 ;;; If the search string contains several strings separated by spaces then
 ;;; these substrings can appear in any order in the results.
 ;;;
@@ -37,7 +37,7 @@
 ;;; to the results anyway to indicate which entry is matched.
 ;;;
 
-;; 
+;;
 
 ;;; Code:
 
@@ -55,7 +55,7 @@
 
 (defvar osg-warning-face 'font-lock-warning-face)
 
-(defvar osg-map 
+(defvar osg-map
   (let ((map (copy-keymap minibuffer-local-map)))
     (define-key map (kbd "<down>") 'osg-next-line)
     (define-key map (kbd "<up>") 'osg-previous-line)
@@ -82,28 +82,26 @@
 (defvar osg-orig-buffer nil)
 
 
-
-
 (defun osg-previous-line ()
   (interactive)
   (osg-move-selection 'forward-line -1))
- 
- 
+
+
 (defun osg-next-line ()
   (interactive)
   (osg-move-selection 'forward-line 1))
- 
- 
+
+
 (defun osg-previous-page ()
   (interactive)
   (osg-move-selection 'scroll-down))
- 
- 
+
+
 (defun osg-next-page ()
   (interactive)
   (osg-move-selection 'scroll-up))
- 
- 
+
+
 (defun osg-move-selection (movefunc &optional movearg)
   (let ((win (get-buffer-window osg-buffer-name)))
     (if win
@@ -164,7 +162,7 @@
                           (goto-char (point-min))
                           (let ((header-not-printed (buffer-name)))
                             (while (and (< result-count osg-max-results)
-                                        (re-search-forward prematch nil t))                        
+                                        (re-search-forward prematch nil t))
                               (let* ((start (save-excursion
                                               (save-match-data
                                                 (outline-previous-heading)
@@ -197,7 +195,7 @@
                                   (setq match (search-forward (pop rest) end t)))
 
                                 (when match
-                                  (setq matches (sort matches (lambda (a b)          
+                                  (setq matches (sort matches (lambda (a b)
                                                                 (< (car a) (car b)))))
 
                                   (setq match
@@ -224,7 +222,7 @@
 
                                   (let ((line-num (1+ (count-lines (point) (point-min)))))
                                     (with-current-buffer osg-buffer-name
-                                      (when header-not-printed                            
+                                      (when header-not-printed
                                         (insert (propertize header-not-printed 'face osg-header-face) "\n")
                                         (setq header-not-printed nil))
 
@@ -277,12 +275,12 @@
           (kill-buffer))
       (save-selected-window
         (pop-to-buffer osg-buffer-name)
-        (erase-buffer))      
+        (erase-buffer))
 
       (unwind-protect
           (let ((minibuffer-local-map osg-map))
             (read-string "Search for: " nil 'osg-history-list))
- 
+
         (remove-hook 'post-command-hook 'osg-check-input))))
 
   (if (not osg-line-info)
