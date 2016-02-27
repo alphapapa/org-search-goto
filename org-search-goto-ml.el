@@ -82,8 +82,6 @@
 (defvar osg-orig-buffer nil)
 
 
-(setq osg-overlay (make-overlay (point) (point)))
-(overlay-put osg-overlay 'after-string (concat "  " (propertize "searching..." 'face osg-warning-face)))
 
 
 (defun osg-previous-line ()
@@ -254,6 +252,9 @@
 
 (defun osg ()
   (interactive)
+
+  (setq osg-overlay (make-overlay (point) (point)))
+  (overlay-put osg-overlay 'after-string (concat "  " (propertize "searching..." 'face osg-warning-face)))
 
   (setq osg-org-buffers
         (delete-if 'null
